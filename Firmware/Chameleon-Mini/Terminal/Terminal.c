@@ -4,6 +4,7 @@
 #include "../LEDHook.h"
 
 #include "../LUFADescriptors.h"
+#include "../Uart.h"
 
 #define INIT_DELAY		(2000 / SYSTEM_TICK_MS)
 
@@ -57,13 +58,18 @@ void TerminalSendHex(void* Buffer, uint16_t ByteCount)
 
 
 void TerminalSendBlock(const void *Buffer, uint16_t ByteCount) {
+    // write to USB
     CDC_Device_SendData(&TerminalHandle, Buffer, ByteCount);
+    // write to UART
+    writeUartBuffer(Buffer, ByteCount);
 }
 
 
 static void ProcessByte(void) {
     int16_t Byte = CDC_Device_ReceiveByte(&TerminalHandle);
+    uint8_t uart_byte = readUartByte();
 
+    // Process USB Input
     if (Byte >= 0) {
         /* Byte received */
         LEDHook(LED_TERMINAL_RXTX, LED_PULSE);
@@ -73,6 +79,11 @@ static void ProcessByte(void) {
         } else if (CommandLineProcessByte(Byte)) {
             /* CommandLine handled the byte */
         }
+    }
+    //Process Uart Input
+    if (uart_byte > 0) {
+      LEDHook(LED_TERMINAL_RXTX, LED_PULSE);
+      CommandLineProcessByte(uart_byte);
     }
 }
 
@@ -157,5 +168,3 @@ void EVENT_USB_Device_ConfigurationChanged(void) {
 void EVENT_USB_Device_ControlRequest(void) {
     CDC_Device_ProcessControlRequest(&TerminalHandle);
 }
-
-
