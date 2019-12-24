@@ -472,7 +472,7 @@ void CommandLineInit(void) {
     BufferIdx = 0;
 }
 
-bool CommandLineProcessByte(uint8_t Byte) {
+bool CommandLine<te(uint8_t Byte) {
     if (IS_CHARACTER(Byte)) {
         /* Store uppercase character */
         if (IS_LOWERCASE(Byte)) {

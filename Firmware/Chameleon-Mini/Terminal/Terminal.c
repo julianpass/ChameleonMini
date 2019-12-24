@@ -33,13 +33,18 @@ TerminalStateEnum TerminalState = TERMINAL_UNINITIALIZED;
 static uint8_t TerminalInitDelay = INIT_DELAY;
 
 void TerminalSendString(const char *s) {
+    sendUartStr(s);
     CDC_Device_SendString(&TerminalHandle, s);
+    // write to UART
+
 }
 
 void TerminalSendStringP(const char *s) {
     char c;
 
     while ((c = pgm_read_byte(s++)) != '\0') {
+        // write to UART
+        sendUartByte(c);
         TerminalSendChar(c);
     }
 }

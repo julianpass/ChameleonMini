@@ -10,3 +10,4 @@ void initUart(void);
 uint8_t readUartByte(void);
 void sendUartByte(uint8_t data);
 void writeUartBuffer(const void* Buffer, uint16_t ByteCount);
+void sendUartStr(char *data);

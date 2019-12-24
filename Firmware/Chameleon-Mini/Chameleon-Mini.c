@@ -1,4 +1,5 @@
 #include "Chameleon-Mini.h"
+#include "uart.h"
 
 int main(void) {
     SystemInit();
@@ -13,6 +14,7 @@ int main(void) {
     AntennaLevelInit();
     LogInit();
     SystemInterruptInit();
+    initUart();
 
     while (1) {
         if (SystemTick100ms()) {
@@ -26,6 +28,8 @@ int main(void) {
             CommandLineTick();
             AntennaLevelTick();
 
+
+
             LEDHook(LED_POWERED, LED_ON);
         }
 
@@ -35,4 +39,3 @@ int main(void) {
         CodecTask();
     }
 }
-
